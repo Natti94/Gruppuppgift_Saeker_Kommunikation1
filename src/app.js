@@ -11,6 +11,7 @@ app.use(cors());
 app.use(express.json()); 
 
 
+
 app.use('/api/users')
 app.use('/api/auth')
 app.use('/api/messages')

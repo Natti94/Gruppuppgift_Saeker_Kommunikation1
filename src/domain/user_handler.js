@@ -2,7 +2,7 @@ const users = [
   {
     id: 1,
     email: "john.doe@example.com",
-    password: "hashedpassword123", // Använd hashed lösenord i produktion
+    password: "hashedpassword123",
     name: "John Doe",
     role: "admin",
     createdAt: new Date("2023-01-01"),

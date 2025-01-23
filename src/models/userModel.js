@@ -46,11 +46,11 @@ const createUser = (id, email, password, name, role) => {
 };
 
 // Example: Create a new user
-try {
+/*try {
   const newUser = createUser(3, "alex.jones@example.com", "hashedpassword789", "Alex Jones", "moderator");
   console.log('User created:', newUser);
 } catch (error) {
   console.error(error.message);
 }
-
+*/
 module.exports = User;

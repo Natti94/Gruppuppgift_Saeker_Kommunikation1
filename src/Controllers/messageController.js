@@ -18,7 +18,7 @@ exports.postMessage = (req, res) => {
 }
 
 exports.getMessages = (req, res) => {
-   const userId = req.user.Id; //antar att det kommer från jwt
+   const userId = req.user.Id; //antar att det kommer från jwt eee wat
    const userMessages = mockConversations.flatMap((conversation) => 
       conversation.messages.filter((message) => message.sender === userId)
    );

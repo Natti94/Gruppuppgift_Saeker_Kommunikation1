@@ -1,6 +1,5 @@
-const User = require('../models/userModel');
 
-let users = [
+const users = [
   {
     id: 1,
     email: "john.doe@example.com",
@@ -30,7 +29,10 @@ let users = [
   },
 ];
 
+
+
 module.exports = {
+  users,
   create: (user) => {
     const newUser = {
       ...user,

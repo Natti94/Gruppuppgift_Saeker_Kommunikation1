@@ -1,6 +1,6 @@
 const User = require('../models/userModel');
 
-const users = [
+let users = [
   {
     id: 1,
     email: "john.doe@example.com",
@@ -29,6 +29,44 @@ const users = [
     updatedAt: new Date("2023-03-10"),
   },
 ];
-  
-  module.exports = users;
-  
+
+module.exports = {
+  create: (user) => {
+    const newUser = {
+      ...user,
+      id: users.length + 1,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    users.push(newUser);
+    return newUser;
+  },
+
+  readByEmail: (email) => {
+    return users.find((user) => user.email === email);
+  },
+
+  readByUserName: (name) => {
+    return users.find((user) => user.name === name);
+  },
+
+  update: (id, updatedFields) => {
+    const userIndex = users.findIndex((user) => user.id === id);
+    if (userIndex === -1) return null;
+
+    users[userIndex] = {
+      ...users[userIndex],
+      ...updatedFields,
+      updatedAt: new Date(),
+    };
+    return users[userIndex];
+  },
+
+  delete: (id) => {
+    const userIndex = users.findIndex((user) => user.id === id);
+    if (userIndex === -1) return false;
+
+    users.splice(userIndex, 1);
+    return true;
+  },
+};

@@ -1,3 +1,5 @@
+const User = require('../models/userModel');
+
 const users = [
   {
     id: 1,

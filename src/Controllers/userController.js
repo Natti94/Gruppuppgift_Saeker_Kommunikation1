@@ -1,5 +1,5 @@
 const users = require('../domain/user_handler.js');
-
+//const userHandler = require('../domain/user_handler.js')
 exports.createUser = (req, res) => {
   try {
     const { email, password, name, role } = req.body;
@@ -52,10 +52,10 @@ exports.getUser = (req, res) => {
 exports.putUser = (req, res) => {
   try {
     const userId = parseInt(req.params.id, 10);
-    const user = users.find((u) => u.id === userId);
+    const user = users.users.find((u) => u.id === userId);
     if (user) {
       
-      user.update(req.body);
+      Object.assign(user, req.body, { updateAt: new Date()})
       res.status(200).json({
         message: 'User updated successfully',
         user: user,

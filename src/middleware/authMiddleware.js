@@ -1,30 +1,26 @@
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
+const { promisify } = require('util');
 
-const SECRET_KEY = process.env.SECRET_KEY;
+const secretKey = process.env.JWT_SECRET_KEY || 'your-secret-key'; // Make sure to set this in your environment
 
-const authMiddleware = (req, res, next) => {
-    const token = req.headers['authorization'];
+// Middleware to verify JWT token
+function authenticateToken(req, res, next) {
+  const token = req.headers['authorization']?.split(' ')[1]; // Get token from "Authorization" header
+  
+  if (!token) {
+    return res.status(401).json({ message: 'Unauthorized: No token provided' });
+  }
 
-    if (!token) {
-        return res.status(401).json({message: 'Authorization token is missing' });
-
+  // Verify the token
+  jwt.verify(token, secretKey, async (err, decoded) => {
+    if (err) {
+      return res.status(403).json({ message: 'Forbidden: Invalid token' });
     }
 
-    const tokenWithoutBearer = token.startsWith('Bearer ') ? token.slice(7) : token;
+    // If valid, attach decoded user data to the request object
+    req.user = decoded;
+    next(); // Pass control to the next middleware or route handler
+  });
+}
 
-    try {
-
-        const decoded = jwt.verify(tokenWithoutBearer, SECRET_KEY);
-
-        req.user = decoded;
-
-        next();
-    } catch (error) {
-        return res.status(403).json({ message: 'Invalid or expired token' });
-
-    }
-
-};
-
-module.exports = authMiddleware;
+module.exports = authenticateToken;

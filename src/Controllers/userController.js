@@ -8,7 +8,6 @@ exports.createUser = (req, res) => {
     const newUser = new User(newId, email, password, name, role);
 
     users.push(newUser);
-
     res.status(201).json({
       message: "User created successfully",
       user: newUser,
@@ -21,7 +20,7 @@ exports.createUser = (req, res) => {
   }
 };
 
-exports.getAllUsers = (req, res) => {
+exports.getAllUsers = async (req, res) => {
   try {
     res.status(200).json(users);
   } catch (error) {
@@ -35,8 +34,8 @@ exports.getAllUsers = (req, res) => {
 exports.getUser = (req, res) => {
   try {
     const userId = parseInt(req.params.id, 10);
-    const user = users.find((u) => u.id === userId);
-    if (user) {
+    const user = users.users.find((u) => u.id === userId);
+    if (userId) {
       res.status(200).json(user);
     } else {
       res.status(404).json({ message: "User not found" });
@@ -74,9 +73,11 @@ exports.deleteUser = (req, res) => {
   try {
     const userId = parseInt(req.params.id, 10);
 
+
     if (isNaN(userId)) {
       return res.status(400).json({ message: "Invalid user ID" });
     }
+    
     const index = users.users.findIndex((u) => u.id === userId);
     if (index !== -1) {-
       users.delete(userId);

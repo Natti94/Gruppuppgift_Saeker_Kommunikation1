@@ -1,3 +1,4 @@
+// ska vi ha kvar detta?
 // Define the User class
 const users = []; // initiate users array
 
@@ -18,12 +19,11 @@ class User {
 
   update(data) {
     if (data.password) {
-      data.password= hashPassword(data.password);
-  }
+      data.password = hashPassword(data.password);
+    }
     Object.assign(this, data);
     this.updatedAt = new Date();
-
-   }
+  }
 }
 
 // Validate email format
@@ -34,10 +34,10 @@ const isValidPassword = (password) => password.length >= 6;
 
 const createUser = (id, email, password, name, role) => {
   if (!isValidEmail(email)) {
-    throw new Error('Invalid email format');
+    throw new Error("Invalid email format");
   }
   if (!isValidPassword(password)) {
-    throw new Error('Password must be at least 6 characters long');
+    throw new Error("Password must be at least 6 characters long");
   }
 
   const newUser = new User(id, email, password, name, role);

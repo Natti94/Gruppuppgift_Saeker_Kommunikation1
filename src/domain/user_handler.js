@@ -1,4 +1,3 @@
-
 const users = [
   {
     id: 1,
@@ -28,8 +27,6 @@ const users = [
     updatedAt: new Date("2023-03-10"),
   },
 ];
-
-
 
 module.exports = {
   users,

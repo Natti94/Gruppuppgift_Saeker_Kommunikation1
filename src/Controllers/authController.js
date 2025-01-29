@@ -29,14 +29,9 @@ exports.register = async (req, res) => {
 
         const hash = await hashPassword(password);
 
-        const user = {
-            email,
-            name,
-            password: hash,
-            role
-        };
+        const user = { email, name, password: hash, role };
+        const createdUser = await userHandler.create(user);
 
-        const createdUser = await userHandler.create(user); 
         res.status(201).json(createdUser);
     } catch (error) {
         res.status(500).json({ message: 'Error registering user', error: error.message });
@@ -47,7 +42,7 @@ exports.login = async (req, res) => {
     const { name, password } = req.body;
 
     try {
-        const user = await userHandler.readByUserName(name); 
+        const user = await userHandler.readByUserName(name);
 
         if (!user) {
             console.log('User not found:', name);
@@ -63,19 +58,50 @@ exports.login = async (req, res) => {
         const accessToken = generateAccessToken({ name: user.name, role: user.role });
         const refreshToken = generateRefreshToken({ name: user.name, role: user.role });
 
-        res.cookie('accessToken', accessToken, { httpOnly: true, secure: false });
-        res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: false });
-
-        return res.status(200).json({ message: "Successfully logged in", accessToken, refreshToken });
+        return res.status(200).json({ 
+            message: "Successfully logged in", 
+            accessToken, 
+            refreshToken 
+        });
     } catch (error) {
         res.status(500).json({ message: "Error logging in", error: error.message });
     }
 };
 
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : null;
+
+    if (!token) {
+        res.setHeader('Content-Type', 'text/plain'); 
+        return res.status(401).send('Unauthorized: No token provided');
+    }
+
+    jwt.verify(token, ACCESS_TOKEN_SECRET, (err, user) => {
+        if (err) {
+            res.setHeader('Content-Type', 'text/plain'); 
+            return res.status(403).send('Forbidden: Invalid token');
+        }
+
+        req.user = user;
+        next();
+    });
+}
+
+function authorizeAdmin(req, res, next) {
+    if (req.user.role !== 'admin') {
+        return res.status(403).json({ message: "Forbidden: Admins only" });
+    }
+    next();
+}
+
 exports.secure = (req, res) => {
-    res.send('Secure data accessed');
+    res.json({ message: 'Secure data accessed', user: req.user });
 };
 
 exports.adminOnly = (req, res) => {
-    res.send('Admin data accessed');
+    res.json({ message: 'Admin data accessed', user: req.user });
 };
+
+exports.authenticateToken = authenticateToken;
+exports.authorizeAdmin = authorizeAdmin;

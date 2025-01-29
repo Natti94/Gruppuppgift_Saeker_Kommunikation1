@@ -77,10 +77,9 @@ exports.deleteUser = (req, res) => {
     if (isNaN(userId)) {
       return res.status(400).json({ message: "Invalid user ID" });
     }
-
-    const index = users.findIndex((u) => u.id === userId);
-    if (index !== -1) {
-      users.splice(index, 1)[0];
+    const index = users.users.findIndex((u) => u.id === userId);
+    if (index !== -1) {-
+      users.delete(userId);
       res.status(200).json({ message: "User deleted successfully"});
     } else {
       res.status(404).json({ message: "User not found" });
@@ -89,6 +88,7 @@ exports.deleteUser = (req, res) => {
     res.status(500).json({
       message: "Error deleting user",
       error: error.message,
+    
     });
   }
 };

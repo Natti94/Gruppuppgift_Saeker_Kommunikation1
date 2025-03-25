@@ -1,4 +1,5 @@
-# GruppProjekt2025
+Node.js App med REST API, Databas & Säkerhetsaspekter
+--
 
 Contributers:
 
